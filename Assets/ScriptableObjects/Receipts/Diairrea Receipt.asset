@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fe15dd1fc89d4f4f9c961a525b24996, type: 3}
+  m_Name: Diairrea Receipt
+  m_EditorClassIdentifier: 
+  Name: Diarrea Potion
+  Description: Potion
+  Image: {fileID: 21300000, guid: 1212ba15464c71842a6f2058818990e5, type: 3}
+  TargetTemperature: 60
+  TimeToFinish: 10
+  Price: 2
+  Ingredients:
+  - {fileID: 11400000, guid: 2482b06016f254ff7b4b7c04580e185d, type: 2}
+  - {fileID: 11400000, guid: 8ca3a8462f4194256bef1cbe308dc77b, type: 2}
