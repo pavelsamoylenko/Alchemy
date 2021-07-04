@@ -16,9 +16,9 @@ public class FlaskUI : MonoBehaviour
     private float _targetTemperature;
 
     private float _currentVelocity;
-    
-    
-    
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +29,7 @@ public class FlaskUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
         _targetTemperature = heatControl.value;
         RegulateTemperature();
         FireImageSizeControl();
@@ -39,7 +39,7 @@ public class FlaskUI : MonoBehaviour
     private void RegulateTemperature()
     {
         CurrentTemperature = Mathf.SmoothDamp(CurrentTemperature, _targetTemperature, ref _currentVelocity, 2f);
-        
+
     }
 
     private void FireImageSizeControl()
@@ -50,7 +50,7 @@ public class FlaskUI : MonoBehaviour
 
     private void SendText()
     {
-        temperatureText.text = "Temperature: " + (int)CurrentTemperature  + "˚";
+        temperatureText.text = $"Temperature: {(int)CurrentTemperature}˚";
     }
 
 

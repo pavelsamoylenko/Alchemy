@@ -3,16 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class ItemDatabase : MonoBehaviour 
+[CreateAssetMenu]
+public class ItemDatabase : ScriptableObject
 {
     public List<Item> items;
-    
-    
-    private void Awake()
-    {
-        items = Item.GetAllInstances();
-        Debug.Log("Items database created. Count: " + items.Count);
-    }
-    
-
 }
