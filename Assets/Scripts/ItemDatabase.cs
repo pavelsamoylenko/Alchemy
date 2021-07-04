@@ -10,7 +10,7 @@ public class ItemDatabase : MonoBehaviour
     
     private void Awake()
     {
-        items = Item.GetAllInstances<Item>();
+        items = Item.GetAllInstances();
         Debug.Log("Items database created. Count: " + items.Count);
     }
     

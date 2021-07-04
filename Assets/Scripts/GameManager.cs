@@ -226,7 +226,8 @@ public class GameManager : MonoBehaviour
 
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(time);
-        if(_gameState != GameState.Over || _gameState !=  GameState.Paused) SetNewRequest();
+        if(_gameState == GameState.Waiting) SetNewRequest();
     }
     
 }
+

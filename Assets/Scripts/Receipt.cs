@@ -28,15 +28,7 @@ public class Receipt : ScriptableObject
     }
     public static List<Receipt> GetAllInstances()
     {
-        var guids = AssetDatabase.FindAssets("t:"+ typeof(Receipt).Name);  //FindAssets uses tags check documentation for more info
-        var a = new List<Receipt>();
-        for(var i = 0; i < guids.Length; i++)         //probably could get optimized 
-        {
-            var path = AssetDatabase.GUIDToAssetPath(guids[i]);
-            a.Add(AssetDatabase.LoadAssetAtPath<Receipt>(path));
-        }
- 
-        return a;
+        return Resources.LoadAll<Receipt>("ScriptableObjects/").ToList();
  
     }
     
