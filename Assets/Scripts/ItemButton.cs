@@ -1,34 +1,25 @@
-using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 using UnityEngine.UI;
 
-public class ItemButton : MonoBehaviour
+public class ItemButton : MonoBehaviour, IPointerClickHandler
 {
-    public event Action<Item> OnClick;
+    public ItemStackViewController ItemStackViewController;
+    public Item Item { get; set; }
 
-    [SerializeField]
-    private Button _button;
-    [SerializeField]
-    private TextMeshProUGUI _nameField;
-    [SerializeField]
-    private Image _image;
-
-    private Item _item;
-
-    public ItemButton InitializeButton(Item item)
+    public void InitializeButton(Item item)
     {
-        _item = item;
-        name = item.Name + " Item Button";
-        _nameField.text = item.Name;
-        _image.sprite = item.Image;
-
-        _button.onClick.AddListener(ClickHandler);
-
-        return this;
+        this.Item = item;
+        this.name = item.Name + " Item Button";
+        this.GetComponentInChildren<TextMeshProUGUI>().text = item.Name;
+        this.GetComponent<Image>().sprite = item.Image;
+        
     }
-
-    private void ClickHandler() => OnClick?.Invoke(_item);
-
-    public void SetActive(bool active) => gameObject.SetActive(active);
+    
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        ItemStackViewController.SendItemToSlot(this.Item);
+    }
 }

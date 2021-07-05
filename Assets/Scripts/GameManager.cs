@@ -9,8 +9,6 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public event Action<ReceiptRequest> OnCharacterCome;
-
     [SerializeField] private SlotsStackViewController _slotsStackViewController;
     [SerializeField] private ItemStackViewController _itemStackViewController;
     [SerializeField] private FlaskUI _flaskUI;
@@ -21,7 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _dialogText;
     [Header("Game parameters")]
     [SerializeField] private int _scoreToWin = 100;
-
+    
+    
 
     private ReceiptsDatabase _receiptsDatabase;
     private CharactersDatabase _charactersDatabase;
@@ -31,9 +30,9 @@ public class GameManager : MonoBehaviour
 
     private GameState _gameState = GameState.Waiting;
     private Receipt _currentReceipt;
-
+    
     private int _currentScore = 0;
-
+    
 
     public enum GameState
     {
@@ -41,11 +40,6 @@ public class GameManager : MonoBehaviour
         Waiting,
         Over,
         Paused
-    }
-
-    public void Initialize(ItemDatabase receiptsDatabase)
-    {
-
     }
 
     private void Start()
@@ -103,7 +97,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowStartGameUI()
     {
-
+        
         _startGameButton.SetActive(true);
     }
 
@@ -130,17 +124,13 @@ public class GameManager : MonoBehaviour
     {
         var request = CreateReceiptRequest();
         _gameState = GameState.Cooking;
-
-        OnCharacterCome?.Invoke(request);
-
-        // TODO: Remove under
+        
         SetReceipt(request.Receipt);
         DisplayTimer();
         TimerImageUpdate();
         _cookingUI.gameObject.SetActive(true);
         _cookingUI.SetCookingUI(request);
     }
-
     public void SetReceipt(Receipt receipt)
     {
         ResetDialogText();
@@ -149,11 +139,11 @@ public class GameManager : MonoBehaviour
         _slotsStackViewController.Reset();
         _slotsStackViewController.SetReceipt(receipt);
     }
-
+    
 
     public void Cook()
     {
-
+        
         _slotsStackViewController.RefreshUserItems();
         if (_currentReceipt.Validate(_slotsStackViewController.UserItemsSet, _flaskUI.CurrentTemperature))
         {
@@ -192,12 +182,13 @@ public class GameManager : MonoBehaviour
     }
 
 
+    
+
     private void DisplayTimer()
     {
         timerImage.gameObject.SetActive(true);
-
+        
     }
-
     private void TimerImageUpdate()
     {
         timerImage.fillAmount = _timeRemaining / _currentReceipt.TimeToFinish;
@@ -208,12 +199,12 @@ public class GameManager : MonoBehaviour
     {
         return new ReceiptRequest(_charactersDatabase.RandomCharacter(), _receiptsDatabase.RandomReceipt());
     }
-
+    
     private Receipt GenerateOrder()
     {
         return _receiptsDatabase.RandomReceipt();
     }
-
+    
     private void GameOver()
     {
         _gameState = GameState.Paused;
@@ -226,6 +217,7 @@ public class GameManager : MonoBehaviour
         _dialogText.text = " ";
     }
 
+    
 
     IEnumerator WaitForNextRequest(float time)
     {
@@ -236,5 +228,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         if(_gameState == GameState.Waiting) SetNewRequest();
     }
+    
 }
 

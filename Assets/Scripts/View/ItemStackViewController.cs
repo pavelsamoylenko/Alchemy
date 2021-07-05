@@ -6,43 +6,42 @@ using UnityEngine.UI;
 
 public class ItemStackViewController : MonoBehaviour
 {
-    public ItemButton itemButtonPrefab;
+    public GameObject itemButtonPrefab;
     public Transform contentParent;
 
     private SlotsStackViewController _slotsStackViewController;
     private ItemDatabase _itemDatabase;
 
-    private List<ItemButton> _buttons = new List<ItemButton>();
-
-    private void Start()
+    private List<GameObject> _buttons = new List<GameObject>();
+    
+    void Start()
     {
         _itemDatabase = FindObjectOfType<ItemDatabase>();
         _slotsStackViewController = FindObjectOfType<SlotsStackViewController>();
         GenerateItemButtons();
     }
 
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
     private void GenerateItemButtons()
     {
-        foreach (var item in _itemDatabase.items)
-        {
-            var button = GenerateButton(item);
-            _buttons.Add(button);
-        }
+        foreach (var item in _itemDatabase.items) GenerateButton(item);
     }
 
-    private ItemButton GenerateButton(Item item)
+    private void GenerateButton(Item item)
     {
-        ItemButton button = Instantiate(itemButtonPrefab, itemButtonPrefab.transform.parent, false);
-        button.InitializeButton(item);
-
-        button.OnClick += SendItemToSlot;
-
+        GameObject button = Instantiate(itemButtonPrefab, itemButtonPrefab.transform.parent, false);
+        button.GetComponent<ItemButton>().InitializeButton(item);
+        _buttons.Add(button);
         button.SetActive(true);
-
-        return button;
     }
 
-    private void SendItemToSlot(Item item)
+    public void SendItemToSlot(Item item)
     {
         _slotsStackViewController.FillSlot(item);
     }
