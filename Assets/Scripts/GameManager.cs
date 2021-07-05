@@ -11,20 +11,12 @@ public class GameManager : MonoBehaviour
 {
     public event Action<ReceiptRequest> OnCharacterCome;
 
-    [SerializeField] private SlotsStackViewController _slotsStackViewController;
-    [SerializeField] private ItemStackViewController _itemStackViewController;
-    [SerializeField] private FlaskUI _flaskUI;
-    [SerializeField] private CookingUI _cookingUI;
-    [SerializeField] private GameObject _startGameButton;
-    [SerializeField] private Image timerImage;
-    [SerializeField] private TextMeshProUGUI _scoreText;
-    [SerializeField] private TextMeshProUGUI _dialogText;
+   
     [Header("Game parameters")]
     [SerializeField] private int _scoreToWin = 100;
 
 
-    private ReceiptsDatabase _receiptsDatabase;
-    private CharactersDatabase _charactersDatabase;
+    private GameData _gameData;
     private float _timeStarted;
 
     [SerializeField] private float _timeRemaining;
@@ -43,15 +35,14 @@ public class GameManager : MonoBehaviour
         Paused
     }
 
-    public void Initialize(ItemDatabase receiptsDatabase)
+    public void Initialize(GameData gameData)
     {
+        _gameData = gameData;
 
     }
 
     private void Start()
     {
-        _receiptsDatabase = GetComponent<ReceiptsDatabase>();
-        _charactersDatabase = GetComponent<CharactersDatabase>();
         StartGame();
     }
 
