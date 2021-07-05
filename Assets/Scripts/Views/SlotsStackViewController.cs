@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class SlotsStackView : MonoBehaviour
+public class SlotsStackViewController : MonoBehaviour
 {
     
     public GameObject slotButtonPrefab;
@@ -15,10 +15,17 @@ public class SlotsStackView : MonoBehaviour
     [HideInInspector]
     public List<Item> UserItemsSet = new List<Item>();
     private Receipt _currentReceipt;
-
+    //private Instruction _currentInstruction;
+    private GameManager GameManager;
+    
     public List<GameObject> _slotsGO = new List<GameObject>();
 
-    
+
+    private void Start()
+    {
+        GameManager = FindObjectOfType<GameManager>();
+    }
+
     public void SetReceipt(Receipt receipt)
     {
         

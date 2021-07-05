@@ -4,19 +4,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemStackView : MonoBehaviour
+public class ItemStackViewController : MonoBehaviour
 {
     public ItemButton itemButtonPrefab;
     public Transform contentParent;
 
-    private SlotsStackView _slotsStackView;
-    
+    private SlotsStackViewController _slotsStackViewController;
+    private ItemDatabase _itemDatabase;
 
     private List<ItemButton> _buttons = new List<ItemButton>();
 
     private void Start()
     {
-        _slotsStackView = FindObjectOfType<SlotsStackView>();
+        _itemDatabase = FindObjectOfType<ItemDatabase>();
+        _slotsStackViewController = FindObjectOfType<SlotsStackViewController>();
         GenerateItemButtons();
     }
 
@@ -43,6 +44,6 @@ public class ItemStackView : MonoBehaviour
 
     private void SendItemToSlot(Item item)
     {
-        _slotsStackView.FillSlot(item);
+        _slotsStackViewController.FillSlot(item);
     }
 }
