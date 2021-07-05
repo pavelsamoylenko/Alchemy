@@ -8,6 +8,16 @@ namespace Views
     {
         [SerializeField] private TextMeshProUGUI _dialogText;
         private Coroutine _coroutine;
+
+
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
         
         public void PostMessage(string text)
         {

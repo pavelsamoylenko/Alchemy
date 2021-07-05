@@ -18,8 +18,14 @@ namespace Presenters
             _model.OnCookFail += SendFailMessage;
             _model.OnTimeElapsed += SendTimeElapsedMessage;
             _model.OnGameFinished += SendWinMessage;
+            _model.OnGameStarted += ShowUI;
         }
-        
+
+        private void ShowUI(GameData obj)
+        {
+            _view.Show();
+        }
+
         public void SendSuccessMessage()
         {
             _view.PostMessage("Well Done");

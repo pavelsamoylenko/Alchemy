@@ -46,6 +46,6 @@ public class GameContext : MonoBehaviour
 
 	private void Start()
 	{
-		_gameManager.StartGame();
+		//_gameManager.StartGame();
 	}
 }
