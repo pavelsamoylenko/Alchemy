@@ -55,17 +55,17 @@ namespace Views
 
 			for (int item = 0; item < items.Count; item++)
 			{
-				if (item != items.Count - 1)
+				if (item == items.Count - 1)
 				{
-					_receiptText.text += (items[item].Name + ".");
+					text += (items[item].Name + ".");
 				}
-				else if (item != items.Count - 2)
+				else if (item == items.Count - 2)
 				{
-					_receiptText.text += (items[item].Name + "and ");
+					text += (items[item].Name + " and ");
 				}
 				else
 				{
-					_receiptText.text += (items[item].Name + ", ");
+					text += (items[item].Name + ", ");
 				}
 			}
 

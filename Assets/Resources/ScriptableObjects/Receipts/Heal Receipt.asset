@@ -15,10 +15,10 @@ MonoBehaviour:
   Name: Healing Flask
   Description: Potion
   Image: {fileID: 21300000, guid: fa9e99d9fa0d8f149b3e06163338283d, type: 3}
-  TargetTemperature: 60
+  TargetTemperature: 30
   TimeToFinish: 13
   Price: 4
   Ingredients:
   - {fileID: 11400000, guid: 2482b06016f254ff7b4b7c04580e185d, type: 2}
-  - {fileID: 11400000, guid: a29b99765cd1a47ac9b6e3d9e1ca9da6, type: 2}
+  - {fileID: 11400000, guid: 094a6784d30c540cbb031dee1553cd42, type: 2}
   - {fileID: 11400000, guid: dd078060b2c3541c89b6824d70a077e9, type: 2}

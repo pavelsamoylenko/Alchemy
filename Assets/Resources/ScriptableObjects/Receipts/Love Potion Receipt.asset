@@ -15,10 +15,10 @@ MonoBehaviour:
   Name: Love Potion
   Description: Potion
   Image: {fileID: 21300000, guid: 23565949412127044ace543e892409b2, type: 3}
-  TargetTemperature: 60
+  TargetTemperature: 70
   TimeToFinish: 10
   Price: 10
   Ingredients:
-  - {fileID: 11400000, guid: 2482b06016f254ff7b4b7c04580e185d, type: 2}
+  - {fileID: 11400000, guid: ff6a4a9903f964352aea94034027754d, type: 2}
   - {fileID: 11400000, guid: a29b99765cd1a47ac9b6e3d9e1ca9da6, type: 2}
-  - {fileID: 11400000, guid: dd078060b2c3541c89b6824d70a077e9, type: 2}
+  - {fileID: 11400000, guid: 094a6784d30c540cbb031dee1553cd42, type: 2}

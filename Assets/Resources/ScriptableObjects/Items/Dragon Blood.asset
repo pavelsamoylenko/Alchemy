@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ade9cc33f2e45abaaccd68129d6fbc, type: 3}
   m_Name: Dragon Blood
   m_EditorClassIdentifier: 
-  Name: Daragon Blood
+  Name: Dragon Blood
   Description: Blood
   Image: {fileID: 21300000, guid: a38de2af0ebcd1d438398af9491043ac, type: 3}
   Type: 0
