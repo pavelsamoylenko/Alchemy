@@ -1,22 +1,27 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
     public class SlotButton : MonoBehaviour, IPointerClickHandler
     {
-        public Image _background;
-        public Image _icon;
-        public Item Item { get; set; }
-        public Sprite defaultSprite;
-        private bool _filled;
         
+        [SerializeField] private TextMeshProUGUI _text;
+        [SerializeField] private Image _background;
+        [SerializeField] private Image _icon;
+        [SerializeField] private Sprite defaultSprite;
+        
+        
+        private bool _filled;
+        public Item Item { get; set; }
 
-        private void Start()
+
+        public void InitializeButton(Item item)
         {
-            
+            Reset();
+            _text.text = item.Name;
         }
-
         public void Fill()
         {
             _background.color = new Color(0,0,0,0);

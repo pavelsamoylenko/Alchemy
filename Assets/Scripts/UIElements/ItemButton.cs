@@ -16,7 +16,7 @@ public class ItemButton : MonoBehaviour
 
     private Item _item;
 
-    public ItemButton InitializeButton(Item item)
+    public void InitializeButton(Item item)
     {
         _item = item;
         name = item.Name + " Item Button";
@@ -24,8 +24,6 @@ public class ItemButton : MonoBehaviour
         _image.sprite = item.Image;
 
         _button.onClick.AddListener(ClickHandler);
-
-        return this;
     }
 
     private void ClickHandler() => OnClick?.Invoke(_item);

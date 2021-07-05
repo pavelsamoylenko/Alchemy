@@ -4,29 +4,12 @@ using System.Collections.Generic;
 using System.Timers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public event Action<ReceiptRequest> OnCharacterCome;
-
-   
-    [Header("Game parameters")]
-    [SerializeField] private int _scoreToWin = 100;
-
-
-    private GameData _gameData;
-    private float _timeStarted;
-
-    [SerializeField] private float _timeRemaining;
-
-    private GameState _gameState = GameState.Waiting;
-    private Receipt _currentReceipt;
-
-    private int _currentScore = 0;
-
-
     public enum GameState
     {
         Cooking,
@@ -34,24 +17,59 @@ public class GameManager : MonoBehaviour
         Over,
         Paused
     }
+    public event Action<ReceiptRequest> OnCharacterCome;
+    public event Action<GameData> OnGameStarted;
+    public event Action OnCook;
+    public event Action OnGameFinished;
+    public event Action OnCookSuccess;
+    public event Action OnCookFail;
+
+    public event Action OnTimeElapsed;
+    
+    public event Action<GameState> OnGameStateChanged;
+
+   
+    [Header("Game parameters")]
+    [SerializeField] private int _scoreToWin = 100;
+
+    [SerializeField] private float _defaultTemperature = 25;
+
+
+    private GameData _gameData;
+    private float _timeStarted;
+    
+    [SerializeField] private float _timeRemaining;
+
+    
+    public List<Item> UserItemsSet = new List<Item>();
+    public float CurrentTemperature;
+    
+    private GameState _gameState = GameState.Waiting;
+    private Receipt _currentReceipt;
+
+
+    public int CurrentScore { get; private set; }
+    public float GameTime { get; set; }
+
+
+    
 
     public void Initialize(GameData gameData)
     {
         _gameData = gameData;
+        CurrentTemperature = _defaultTemperature;
+        CurrentScore = 0;
 
-    }
-
-    private void Start()
-    {
-        StartGame();
     }
 
     public void StartGame()
     {
-        ShowGameUI();
-        _currentScore = 0;
-        ResetDialogText();
-        _scoreText.text = "Score: " + _currentScore;
+        
+        OnGameStarted?.Invoke(_gameData);
+        CurrentScore = 0;
+        
+        //ResetDialogText();
+        //_scoreText.text = "Score: " + _currentScore;
         _timeStarted = Time.time;
         SetNewRequest();
     }
@@ -63,17 +81,17 @@ public class GameManager : MonoBehaviour
         {
             case GameState.Cooking when _timeRemaining > 0:
                 _timeRemaining -= Time.deltaTime;
-                TimerImageUpdate();
                 break;
             case GameState.Cooking:
-                SendTimeElapsedMessage();
-                _cookingUI.gameObject.SetActive(false);
+                OnTimeElapsed?.Invoke();
+                //SendTimeElapsedMessage();
+                //_cookingUI.gameObject.SetActive(false);
                 _gameState = GameState.Waiting;
                 StartCoroutine(WaitForNextRequest(5));
                 break;
             case GameState.Waiting:
             {
-                if (_currentScore >= _scoreToWin)
+                if (CurrentScore >= _scoreToWin)
                 {
                     _gameState = GameState.Over;
                 }
@@ -82,148 +100,75 @@ public class GameManager : MonoBehaviour
             }
             case GameState.Over:
                 GameOver();
-                HideGameUI();
                 break;
             case GameState.Paused:
-                ShowStartGameUI();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
 
-    public void ShowStartGameUI()
-    {
-
-        _startGameButton.SetActive(true);
-    }
-
-    public void HideGameUI()
-    {
-        _slotsStackViewController.gameObject.SetActive(false);
-        _itemStackViewController.gameObject.SetActive(false);
-        _cookingUI.gameObject.SetActive(false);
-        _flaskUI.gameObject.SetActive(false);
-
-    }
-
-    public void ShowGameUI()
-    {
-        _startGameButton.SetActive(false);
-        _slotsStackViewController.gameObject.SetActive(true);
-        _itemStackViewController.gameObject.SetActive(true);
-        _cookingUI.gameObject.SetActive(true);
-        _flaskUI.gameObject.SetActive(true);
-    }
-
 
     public void SetNewRequest()
     {
         var request = CreateReceiptRequest();
+        _currentReceipt = request.Receipt;
+        _timeRemaining = _currentReceipt.TimeToFinish;
         _gameState = GameState.Cooking;
-
         OnCharacterCome?.Invoke(request);
 
-        // TODO: Remove under
-        SetReceipt(request.Receipt);
-        DisplayTimer();
-        TimerImageUpdate();
-        _cookingUI.gameObject.SetActive(true);
-        _cookingUI.SetCookingUI(request);
     }
-
-    public void SetReceipt(Receipt receipt)
-    {
-        ResetDialogText();
-        _currentReceipt = receipt;
-        _timeRemaining = receipt.TimeToFinish;
-        _slotsStackViewController.Reset();
-        _slotsStackViewController.SetReceipt(receipt);
-    }
-
-
+    
     public void Cook()
     {
 
-        _slotsStackViewController.RefreshUserItems();
-        if (_currentReceipt.Validate(_slotsStackViewController.UserItemsSet, _flaskUI.CurrentTemperature))
+        OnCook?.Invoke(); // Here we refresh UserItemSet
+        
+        if (_currentReceipt.Verify(UserItemsSet, CurrentTemperature))
         {
-            SendSuccessMessage();
-            _cookingUI.DisableCook();
-            _currentScore += _currentReceipt.Price;
-            UpdateScoreUI();
+            CurrentScore += _currentReceipt.Price;
+            OnCookSuccess?.Invoke();
             _gameState = GameState.Waiting;
             StartCoroutine(WaitForNextRequest(2));
         }
         else
         {
-            _slotsStackViewController.RefreshSlots();
-            SendFailMessage();
+            OnCookFail?.Invoke();
         }
     }
 
-    private void UpdateScoreUI()
-    {
-        _scoreText.text = "Score: " + _currentScore;
-    }
-
-    private void SendSuccessMessage()
-    {
-        _dialogText.text = "Well Done";
-    }
-
-    private void SendFailMessage()
-    {
-        _dialogText.text = "Something went wrong. Try again.";
-    }
-
-    private void SendTimeElapsedMessage()
-    {
-        _dialogText.text = "Customer left";
-    }
 
 
-    private void DisplayTimer()
-    {
-        timerImage.gameObject.SetActive(true);
+    
 
-    }
 
-    private void TimerImageUpdate()
-    {
-        timerImage.fillAmount = _timeRemaining / _currentReceipt.TimeToFinish;
-    }
-
+ 
+    
 
     private ReceiptRequest CreateReceiptRequest()
     {
-        return new ReceiptRequest(_charactersDatabase.RandomCharacter(), _receiptsDatabase.RandomReceipt());
+        return new ReceiptRequest(_gameData.GetRandomCharacter(), _gameData.GetRandomReceipt());
     }
 
     private Receipt GenerateOrder()
     {
-        return _receiptsDatabase.RandomReceipt();
+        return _gameData.GetRandomReceipt();
     }
 
     private void GameOver()
     {
+        
+        GameTime = Time.time - _timeStarted;
+        StopAllCoroutines();
         _gameState = GameState.Paused;
-        var gameTime = Time.time - _timeStarted;
-        _dialogText.text = "You won! Time: " + gameTime + " seconds";
+        OnGameFinished?.Invoke();
     }
 
-    private void ResetDialogText()
-    {
-        _dialogText.text = " ";
-    }
+    
 
 
     IEnumerator WaitForNextRequest(float time)
     {
-        //Print the time of when the function is first called.
-        Debug.Log("Started Coroutine at timestamp : " + Time.time);
-
-        //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(time);
         if(_gameState == GameState.Waiting) SetNewRequest();
     }

@@ -14,6 +14,19 @@ namespace Presenters
 			_model = model;
 
 			_model.OnCharacterCome += CharacterComeHandler;
+			_model.OnGameFinished += GameFinishedHandler;
+			_model.OnTimeElapsed += TimeElapsedHandler;
+
+		}
+
+		private void TimeElapsedHandler()
+		{
+			_view.Hide();
+		}
+
+		private void GameFinishedHandler()
+		{
+			_view.Hide();
 		}
 
 		private void CharacterComeHandler(ReceiptRequest request)

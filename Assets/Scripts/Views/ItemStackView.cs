@@ -7,31 +7,35 @@ using UnityEngine.UI;
 public class ItemStackView : MonoBehaviour
 {
     public ItemButton itemButtonPrefab;
-    public Transform contentParent;
+    [SerializeField] private GameObject buttonsParent;
+    [SerializeField] private SlotsStackView _slotsStackView;
 
-    private SlotsStackView _slotsStackView;
+    private List<GameObject> _buttons = new List<GameObject>();
     
 
-    private List<ItemButton> _buttons = new List<ItemButton>();
-
-    private void Start()
+    
+    public void GenerateItemButtons(List<Item> items)
     {
-        _slotsStackView = FindObjectOfType<SlotsStackView>();
-        GenerateItemButtons();
-    }
-
-    private void GenerateItemButtons()
-    {
-        foreach (var item in _itemDatabase.items)
+        Reset();
+        foreach (var item in items)
         {
             var button = GenerateButton(item);
-            _buttons.Add(button);
+            _buttons.Add(button.gameObject);
         }
+    }
+
+    private void Reset()
+    {
+        foreach (var go in _buttons)
+        {
+            Destroy(go);
+        }
+        _buttons.Clear();
     }
 
     private ItemButton GenerateButton(Item item)
     {
-        ItemButton button = Instantiate(itemButtonPrefab, itemButtonPrefab.transform.parent, false);
+        ItemButton button = Instantiate(itemButtonPrefab, buttonsParent.transform, false);
         button.InitializeButton(item);
 
         button.OnClick += SendItemToSlot;
@@ -44,5 +48,15 @@ public class ItemStackView : MonoBehaviour
     private void SendItemToSlot(Item item)
     {
         _slotsStackView.FillSlot(item);
+    }
+
+    public void Show()
+    {
+        this.gameObject.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        this.gameObject.SetActive(false);
     }
 }

@@ -10,31 +10,30 @@ using UnityEngine.UI;
 public class SlotsStackView : MonoBehaviour
 {
     
-    public GameObject slotButtonPrefab;
-
-    [HideInInspector]
-    public List<Item> UserItemsSet = new List<Item>();
-    private Receipt _currentReceipt;
-
+    public SlotButton slotButtonPrefab;
     public List<GameObject> _slotsGO = new List<GameObject>();
 
+    private Receipt _currentReceipt;
     
-    public void SetReceipt(Receipt receipt)
+    
+    public void ShowReceiptSlots(Receipt receipt)
     {
-        
         _currentReceipt = receipt;
-        var itemsSequence = _currentReceipt.Ingredients;
+        Reset();
+        var itemsSequence = receipt.Ingredients;
         foreach (var item in itemsSequence)
         {
             GenerateSlot(item);
         }
-        RefreshUserItems();
+    }
+
+    public void RefreshReceiptSlots()
+    {
+        ShowReceiptSlots(_currentReceipt);
     }
     
     public void FillSlot(Item item)
     {
-        var itemSequence = _currentReceipt.Ingredients;
-        //if (!itemSequence.Contains(item)) return;
         foreach (var slotGO in _slotsGO)
         {
             if (!slotGO.GetComponent<SlotButton>().isFilled())
@@ -45,29 +44,28 @@ public class SlotsStackView : MonoBehaviour
                 break;
             }
         }
-        RefreshUserItems();
     }
 
-    public void RefreshUserItems()
+    public List<Item> GetFilledSlots()
     {
-        UserItemsSet.Clear();
+        var list = new List<Item>();
         foreach (var slotGO in _slotsGO)
         {
             var slot = slotGO.GetComponent<SlotButton>();
             if (slot.isFilled())
             {
-                UserItemsSet.Add(slot.Item);
+                list.Add(slot.Item);
             }
         }
+
+        return list;
     }
     private void GenerateSlot(Item item)
     {
-        GameObject button = Instantiate(slotButtonPrefab, this.transform, false);
+        SlotButton button = Instantiate(slotButtonPrefab, this.transform, false);
         button.name = item.Name + " Slot Button";
-        button.GetComponentInChildren<TextMeshProUGUI>().text = item.Name;
-        _slotsGO.Add(button);
-        button.SetActive(true);
-        button.GetComponent<SlotButton>().Reset();
+        button.InitializeButton(item);
+        _slotsGO.Add(button.gameObject);
     }
 
     public void Reset()
@@ -78,15 +76,14 @@ public class SlotsStackView : MonoBehaviour
         }
         _slotsGO.Clear();
     }
-    public void RefreshSlots()
+
+    public void Show()
     {
-        Reset();
-        var itemsSequence = _currentReceipt.Ingredients;
-        foreach (var item in itemsSequence)
-        {
-            GenerateSlot(item);
-        }
-        RefreshUserItems();
+        this.gameObject.SetActive(true);
     }
-    
+
+    public void Hide()
+    {
+        this.gameObject.SetActive(false);
+    }
 }

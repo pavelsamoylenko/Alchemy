@@ -7,6 +7,21 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/Item")]
 public class Item : ScriptableObject
 {
+    public enum ItemType 
+    {
+        Liquid,
+        Powder,
+        Herb,
+        Potion,
+        Other
+    }
+    public enum ItemLevel
+    {
+        Common,
+        Rare,
+        Legendary
+    }
+    
     public string Name;
     public string Description;
     public Sprite Image;

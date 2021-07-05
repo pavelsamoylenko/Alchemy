@@ -1,4 +1,5 @@
-﻿using Presenters;
+﻿using System;
+using Presenters;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,25 +17,35 @@ public class GameContext : MonoBehaviour
 	private GameData _gameData;
 
 	[Header("UI")]
-	[SerializeField]
-	private CharacterPanelView _characterPanel;
-	[FormerlySerializedAs("_slotsStackViewController")] [SerializeField] private SlotsStackView _slotsStackView;
-	[FormerlySerializedAs("_itemStackViewController")] [SerializeField] private ItemStackView _itemStackView;
-	[SerializeField] private FlaskUI _flaskUI;
-	[SerializeField] private CookingUI _cookingUI;
-	[SerializeField] private GameObject _startGameButton;
-	[SerializeField] private Image timerImage;
-	[SerializeField] private TextMeshProUGUI _scoreText;
-	[SerializeField] private TextMeshProUGUI _dialogText;
+	[SerializeField] private CharacterPanelView _characterPanel;
+	[SerializeField] private SlotsStackView _slotsStackView;
+	[SerializeField] private ItemStackView _itemStackView;
+	[SerializeField] private StartMenuView _startMenuView;
+	[SerializeField] private CookingView _cookingView;
+	[SerializeField] private NotificationsView _notificationsView;
 
 
 	private CharacterPanelPresenter _characterPanelPresenter;
+	private CookingViewPresenter _cookingViewPresenter;
+	private NotificationsViewPresenter _notificationsViewPresenter;
+	private MenuViewPresenter _menuViewPresenter;
+	private StackViewPanelPresenter _stackViewPanelPresenter;
 
 	private void Awake()
 	{
 		_gameManager.Initialize(_gameData);
-
 		_characterPanelPresenter = new CharacterPanelPresenter(_characterPanel, _gameManager);
+		_cookingViewPresenter = new CookingViewPresenter(_cookingView, _gameManager);
+		_notificationsViewPresenter = new NotificationsViewPresenter(_notificationsView, _gameManager);
+		_menuViewPresenter = new MenuViewPresenter(_startMenuView, _gameManager);
+		_stackViewPanelPresenter = new StackViewPanelPresenter(_itemStackView, _slotsStackView, _gameManager);
+
+
 		// TODO: Convert other Views.
+	}
+
+	private void Start()
+	{
+		_gameManager.StartGame();
 	}
 }

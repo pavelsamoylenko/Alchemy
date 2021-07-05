@@ -19,7 +19,7 @@ public class Receipt : ScriptableObject
     
     private float _temperatureOffset = 5f;
 
-    public bool Validate(List<Item> userSet, float temperature)
+    public bool Verify(List<Item> userSet, float temperature)
     {
         
         return (userSet.SequenceEqual(Ingredients) &&
